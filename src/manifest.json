@@ -1,6 +1,6 @@
 {
    "manifest_version": 2,
-    "name": "Transfer send for Firefox",
+    "name": "Transfer Send for Firefox",
     "version": "1.6",
     "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) while Keeping your Personal Information Private",
     "author": "Christophe Villeneuve",
