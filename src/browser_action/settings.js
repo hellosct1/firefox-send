@@ -1,8 +1,8 @@
 (function(browser) {
   "use strict";
- 
-  var url = "https://send.firefox.com/";
-  
+   
+  var url  = "https://send.firefox.com/"; 
+   
   // message
   document.getElementById("message").textContent ="Transfer for Firefox send";
   

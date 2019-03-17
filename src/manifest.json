@@ -1,9 +1,10 @@
 {
    "manifest_version": 2,
     "name": "Transfer Send for Firefox",
-    "version": "1.6",
+    "version": "1.8",
     "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) while Keeping your Personal Information Private",
     "author": "Christophe Villeneuve",
+    "homepage_url": "https://github.com/hellosct1/firefox-send",
     "icons": {
         "48":  "icons/icon-48.png",
         "32":  "icons/icon-32.png",
@@ -26,6 +27,8 @@
   "permissions": [
     "tabs",
     "<all_urls>"
-  ]
+  ],
   
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://send.firefox.com; object-src 'none'"
+
 }

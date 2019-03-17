@@ -1,5 +1,5 @@
-var url = "https://send.firefox.com"; 
-
+ var url  = "https://send.firefox.com/"; 
+ 
 var thisPanel = browser.extension.getURL(url);
 
 function toggle(panel) {
