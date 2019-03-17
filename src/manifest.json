@@ -23,12 +23,12 @@
       "default_panel": "sidebar/send.html",
       "default_icon": "icons/icon-128.png"
     },
-
+ 
+   "content_security_policy": "script-src 'self'; object-src 'self'; img-src 'self'",
+    
   "permissions": [
     "tabs",
     "<all_urls>"
-  ],
-  
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://send.firefox.com; object-src 'none'"
+  ]
 
 }
