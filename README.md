@@ -10,7 +10,7 @@ You must download the extension <a href='https://addons.mozilla.org/fr/firefox/a
 
 After, you can open the Send service from the new toolbar button in a new tab or in the Firefox side panel
 
-## Compatibilité
+## Compatibility
 - Firefox Desktop
 - Firefox Android
 
