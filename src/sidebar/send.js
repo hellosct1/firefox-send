@@ -1,12 +1,6 @@
- var url  = "https://send.firefox.com/"; 
+var url  = "https://send.firefox.com/";
  
-var thisPanel = browser.extension.getURL(url);
+var panel = browser.runtime.getURL(url);
 
-function toggle(panel) {
-   browser.sidebarAction.setPanel({panel: thisPanel});
-}
-
-
-var gettingPanel = browser.sidebarAction.getPanel({});
-gettingPanel.then(toggle);
+browser.sidebarAction.setPanel({panel: panel});
   
