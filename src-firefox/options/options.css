@@ -1,0 +1,24 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 90%;
+	background-color: #F4F7F8;
+	font-size: 14px;
+	background: #e6e6e6;
+	width: 590px;
+	margin: auto;
+}
+
+p {
+	margin: 1em 2em;
+}
+
+div {
+	border: 1px solid;
+	padding: 5px 5px 5px 5px;
+}
