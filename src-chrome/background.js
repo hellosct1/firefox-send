@@ -1,19 +1,19 @@
+
 function onError(error) {
 	console.log(`Error: ${error}`);
 }
 
 function open() {
-      browser.sidebarAction.open();
+      chrome.sidebarAction.open();
 }
 
 function close() {
-      browser.sidebarAction.close();
+      chrome.sidebarAction.close();
 }
 
 function onGot(item) {
-
   if (typeof (item.settings) == 'undefined' || item.settings['views'] == 'slideBar') {
-     browser.sidebarAction.isOpen({}).then(result => {
+     chrome.sidebarAction.isOpen({}).then(result => {
         if (result == true) {
           close();
         } else {
@@ -21,12 +21,13 @@ function onGot(item) {
         }
       });
 
-    browser.browserAction.onClicked.addListener(open);
+    chrome.browserAction.onClicked.addListener(open);
 	} else {
-    browser.tabs.create({
+    chrome.tabs.create({
       "url": item.settings['links']
     });
 	}
+
 }
 
-browser.storage.local.get('settings').then(onGot, onError);
+chrome.storage.local.get('settings').then(onGot, onError);

@@ -1,18 +1,44 @@
-# History
+# History : transfer send for Firefox
 
 
-## v1.0
+
+## Firefox
+
+### 1.11
+* Création d'un fichier de configuration au lieu de proposer les options dans la barre d'outils [issue ]
+* Nettoyage du code
+* Incorporation des issues [issue ]
+
+### 1.10
+
+### 1.09
+
+### 1.08
+
+### 1.07
+
+### 1.06
+
+### 1.05
+
+### 1.04
+
+### 1.03
+
+### 1.02
+
+### 1.01
+
+### 1.00
 Facilitate file transfer with Firefox Send (https://send.firefox.com) while Keeping your Personal Information Private
 
-
-## Description
-You must download the extension <a href='https://addons.mozilla.org/fr/firefox/addon/send-to-fx/'>Transfer Send for Firefox</a>.
-
-After, you can open the Send service from the new toolbar button in a new tab or in the Firefox side panel
-
-## Compatibility
+### Compatibility
 - Firefox Desktop
 - Firefox Android
+
+## Chrome
+
+## Thunderbird
 
 ## Licence
 Mozilla Public License, version 2.0
