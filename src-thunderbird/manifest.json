@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "FileLink for transfer send for Firefox",
+  "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) for Thunderbird while Keeping your Personal Information Private",
+  "version": "1.00",
+  "author": "Christophe Villeneuve",
+  "applications": {
+    "gecko": {
+      "id": "hellosct1@mozfr.org"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png"
+  },
+
+  "default_locale": "en",
+
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+
+  "cloud_file": {
+    "name": "FirefoxSend",
+    "management_url": "/content/settings.html",
+    "service_url": "https://send.firefox.com/"
+  },
+
+  "permissions": [
+    "https://send.firefox.com/*",
+    "storage"
+  ]
+
+}

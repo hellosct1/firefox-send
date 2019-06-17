@@ -1,0 +1,17 @@
+{
+  "extensionDescription": {
+    "message": "Partagez vos pièces jointes avec Firefox send"
+  },
+  "extensionName": {
+    "message": "FileLink pour Firefox send"
+  },
+  "serviceName": {
+    "message": "Firefox send"
+  },
+  "moments_privacyPolicy": {
+    "message": "Politique de confidentialité"
+  },
+  "moments_tagline": {
+    "message": "Firefox send envoyer vos fichiers dans le monde entier."
+  }
+}
