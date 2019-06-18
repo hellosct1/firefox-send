@@ -19,6 +19,17 @@ You must download the extension
 After, you can open the Send service from the new toolbar button in a new tab or in the Firefox side panel
 
 
+## Github
+
+* src-chrome :
+Code source de l'extension disponible sur Chrome store
+
+* src-firefox :
+Code source de l'extension pour Firefox (desktop and mobile)
+
+* src-thunderbird :
+Code source de l'extension pour Thunderbird
+
 ## Licence
 Mozilla Public License, version 2.0
 
