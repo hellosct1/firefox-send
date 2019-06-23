@@ -1,10 +1,16 @@
 # History : transfer send for Firefox to Chrome
 
 
-## Chrome
+## Version
+
+### 1.01
+* Optimisation du code
+* Nettoyage
 
 ### 1.00
+Initialisation project
 Cette version s'appuie sur la version de **Transfer Send for Firefox** 1.11
+
 
 ### Compatibility
 - Chrome

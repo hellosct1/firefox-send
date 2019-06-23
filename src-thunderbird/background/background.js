@@ -6,6 +6,12 @@
 
 /* globals browser */
 
+/* anonym */
+const anonym = {MAX_FILE_SIZE: 1073741824, MAX_DOWNLOADS: 1, MAX_EXPIRE_SECONDS: 86400};
+
+/* identifie */
+const identifie = {MAX_FILE_SIZE: 2684354560,MAX_DOWNLOADS: 100, MAX_EXPIRE_SECONDS: 604800};
+
 const FIVE_MB = 5242880;  // A voir
 //const TWO_GB = 2147483648;
 const ONE_GB = 1073741824;
@@ -41,7 +47,7 @@ class transferSendFirefox {
     )["\x6a\x6f\x69\x6e"]("");})(window,headers)
   */
     /* eslint-enable */
-    
+
     if (this.token && withToken) {
       headers.Authorization = "Bearer " + this.token;
     }

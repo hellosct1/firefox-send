@@ -1,33 +1,47 @@
+const appUrl = chrome.extension.getURL("https://send.firefox.com");
 
-function onError(error) {
-	console.log(`Error: ${error}`);
+/* target Tab open */
+function TargetTab(tab) {
+  chrome.tabs.update(tab.id, {
+    active: true
+  });
+  chrome.windows.update(tab.windowId, {
+    focused: true
+  });
 }
 
-function open() {
-      chrome.sidebarAction.open();
+
+function execute() {
+  chrome.tabs.create({
+    url: appUrl
+  });
 }
 
-function close() {
-      chrome.sidebarAction.close();
+function prepare(tabs) {
+  if (tabs.length > 0) {
+    const appTab = tabs[0];
+    TargetTab(appTab);
+  } else {
+    execute();
+  }
 }
 
-function onGot(item) {
-  if (typeof (item.settings) == 'undefined' || item.settings['views'] == 'slideBar') {
-     chrome.sidebarAction.isOpen({}).then(result => {
-        if (result == true) {
-          close();
-        } else {
-          open();
-        }
-      });
+function start(tabs) {
+  const activeTab = tabs[0];
+  crawlUrl = activeTab.url;
 
-    chrome.browserAction.onClicked.addListener(open);
-	} else {
-    chrome.tabs.create({
-      "url": item.settings['links']
-    });
-	}
-
+  chrome.tabs.query({
+      url: appUrl
+    },
+    prepare
+  );
 }
 
-chrome.storage.local.get('settings').then(onGot, onError);
+function onGot(tab) {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, start);
+}
+
+chrome.browserAction.onClicked.addListener(onGot);

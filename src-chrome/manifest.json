@@ -1,28 +1,28 @@
 {
-    "manifest_version": 2,
-    "name": "Transfer Send for Firefox",
-    "version": "1.11",
-    "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) while Keeping your Personal Information Private",
-    "browser_action": {
-          "default_popup": "browser_action/send.html",
-          "default_icon":  "browser_action/logo_19.png"
-    },
-    "author": "Christophe Villeneuve",
-    "icons": {
-        "16":  "icons/icon-16.png",
-        "19":  "icons/icon-19.png",
-        "32":  "icons/icon-32.png",
-        "48":  "icons/icon-48.png",
-        "96":  "icons/icon-96.png"
-    },
-    "background": {
-      "scripts": ["background.js"]
-    },
-    "options_page": "options.html",
+  "manifest_version": 2,
+  "name": "Transfer Send for Firefox",
+  "version": "1.01",
+  "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) while Keeping your Personal Information Private",
+  "browser_action": {
+    "default_icon": "browser_action/logo_19.png"
+  },
+  "content_security_policy": "script-src 'self' https://send.firefox.com; object-src 'self'",
+  "author": "Christophe Villeneuve",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "19": "icons/icon-19.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
 
-    "permissions": [
-      "https://send.firefox.com/*",
-      "tabs",
-      "storage"
-    ]
+  "permissions": [
+    "https://send.firefox.com/*",
+    "tabs",
+    "storage"
+  ]
 }

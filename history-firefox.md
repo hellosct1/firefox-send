@@ -2,7 +2,7 @@
 
 
 
-## Firefox
+## Version
 
 ### 1.11
 * Création d'un fichier de configuration au lieu de proposer les options dans la barre d'outils [issue ]
