@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "FileLink for transfer send for Firefox",
   "description": "Facilitate file transfer with Firefox Send (https://send.firefox.com) for Thunderbird while Keeping your Personal Information Private",
-  "version": "1.00",
+  "version": "0.10",
   "author": "Christophe Villeneuve",
   "applications": {
     "gecko": {

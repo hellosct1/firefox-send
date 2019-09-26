@@ -1,70 +1,113 @@
-// firefox sendœ
+// firefox send dev for thunderbird
+//regarder fichier streams.md ~/wwwMozilla/send/docs/notes
+
+
+
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/* globals browser */
 
-/* anonym */
-const anonym = {MAX_FILE_SIZE: 1073741824, MAX_DOWNLOADS: 1, MAX_EXPIRE_SECONDS: 86400};
+var LIMITS = {
+  "ANON": {
+    "MAX_FILE_SIZE": 1073741824,
+    "MAX_DOWNLOADS": 1,
+    "MAX_EXPIRE_SECONDS": 86400
+  },
+  "MAX_FILE_SIZE": 2684354560,
+  "MAX_DOWNLOADS": 100,
+  "MAX_EXPIRE_SECONDS": 604800,
+  "MAX_FILES_PER_ARCHIVE": 64,
+  "MAX_ARCHIVES_PER_USER": 16
+};
+var DEFAULTS = {
+  "DOWNLOAD_COUNTS": [1, 2, 3, 4, 5, 20, 50, 100],
+  "EXPIRE_TIMES_SECONDS": [300, 3600, 86400, 604800],
+  "EXPIRE_SECONDS": 86400
+};
+var PREFS = {};
+var downloadMetadata = {};
+var AUTH_CONFIG = {
+  "authorization_endpoint": "https://accounts.firefox.com/authorization",
+  "issuer": "https://accounts.firefox.com",
+  "jwks_uri": "https://oauth.accounts.firefox.com/v1/jwks",
+  "token_endpoint": "https://oauth.accounts.firefox.com/v1/token",
+  "userinfo_endpoint": "https://profile.accounts.firefox.com/v1/profile",
+  "claims_supported": ["aud", "exp", "iat", "iss", "sub"],
+  "id_token_signing_alg_values_supported": ["RS256"],
+  "response_types_supported": ["code", "token"],
+  "scopes_supported": ["openid", "profile", "email"],
+  "subject_types_supported": ["public"],
+  "token_endpoint_auth_methods_supported": ["client_secret_post"],
+  "key_scope": "https://identity.mozilla.com/apps/send",
+  "client_id": "1f30e32975ae5112"
+};
 
-/* identifie */
-const identifie = {MAX_FILE_SIZE: 2684354560,MAX_DOWNLOADS: 100, MAX_EXPIRE_SECONDS: 604800};
+var SENTRY_CONFIG = {
+  dsn: 'https://19f0b72804bf4066a5cf854251a96de3@sentry.prod.mozaws.net/252',
+  release: 'v3.0.18',
+  beforeSend: function(data) {
+    var hash = window.location.hash;
+    if (hash) {
+      return JSON.parse(JSON.stringify(data).replace(new RegExp(hash.slice(1), 'g'), ''));
+    }
+    return data;
+  }
+};
 
-const FIVE_MB = 5242880;  // A voir
-//const TWO_GB = 2147483648;
-const ONE_GB = 1073741824;
+
+/*
+var rand = function() {
+    return Math.random().toString(36).substr(2); // remove `0.`
+};
+
+var TOKEN = function() {
+    return rand() + rand(); // to make it longer
+};
+*/
+
+/********************************************************************************************/
+/********************************************************************************************/
 
 class transferSendFirefox {
+
   constructor() {
-    console.log ('class transferSendFirefox... constructor');
+    console.log('Etape01 : class transferSendFirefox... constructor');
     this.token = null;
   }
 
   async _request(endpoint, fetchinfo, withToken = true) {
-    let url = new URL(endpoint, "https://send.firefox.com/");
-    let headers = { "content-type": "application/json" };
+    console.log("Etape07 : request");
 
-    // Before you spend time trying to find out what this means, please note
-    // that doing so and using the information WILL cause WeTransfer to revoke
-    // this extension's privileges, which means not one Thunderbird user will
-    // be able to upload to WeTransfer using Thunderbird. This will cause
-    // unhappy users all around which means that the developers will have to
-    // spend more time with user support, which means less time for features,
-    // releases and bugfixes. For a paid developer this would actually mean
-    // financial harm.
-    //
-    // Do you really want all of this to be your fault? Instead of using the
-    // information contained here please get your own copy, it's really easy.
-    /* eslint-disable */
-/*    ((y,z)=>{z["\x78\x2d\x61\x70\x69\x2d\x6b\x65\x79"]=y["\x41\x72\x72\x61"+
-    "\x79"]["\x66\x72\x6f\x6d"](("\x78\x4f\x57\x49\x33")+"\x51\x3a\x78\x39"+
-    "\x42\x6d\x6f\x78\x76\x74"+("\x67\x32\x58\x48\x67\x36\x45\x53\x70\x32")+
-    "\x73\x6e\x70\x4a\x7b\x75\x58\x79\x6f\x58"+"\x53\x44\x51\x64\x31"+"",c=>
-    y[("\x53\x74\x72\x69\x6e\x67")+("")]["\x66\x72\x6f\x6d\x43\x68\x61\x72"+
-    "\x43\x6f\x64\x65"](c["\x63\x68\x61\x72\x43\x6f\x64\x65\x41\x74"](0)-!0)
-    )["\x6a\x6f\x69\x6e"]("");})(window,headers)
-  */
-    /* eslint-enable */
+    //    let url = new URL(endpoint, "https://api.send.firefox.com");
+    //    let url = new URL(endpoint, "http://localhost:8080/");
+    let url = new URL(endpoint, "https://send.firefox.com");
+    let headers = {
+      "content-type": "application/json"
+    };
 
-    if (this.token && withToken) {
-      headers.Authorization = "Bearer " + this.token;
-    }
-
-    fetchinfo.mode = "cors";
-    fetchinfo.headers = headers;
+    // fetch info
     if (!fetchinfo.method) {
       fetchinfo.method = "POST";
     }
+    fetchinfo.headers = headers;
+    fetchinfo.auth_config = AUTH_CONFIG;
+
+    console.log("fetchinfo:");
+    console.log(fetchinfo);
 
     let response = await fetch(url, fetchinfo);
+    console.log('----> response');
+    console.log(response);
 
     let responseData;
     if (response.headers.get("content-type") == "application/json") {
       try {
+        console.log('it s TRUE');
         responseData = await response.json();
       } catch (e) {
+        console.log('err');
         if (!response.ok) {
           throw new Error(response.statusText);
         }
@@ -77,115 +120,173 @@ class transferSendFirefox {
     } else {
       responseData = await response.text();
     }
+    console.log('---> Return reponseData : ');
+    console.log(responseData);
     return responseData;
+
   }
 
-  // function authorize
+
   async authorize(signal = null) {
-    let data = await this._request("/v2/authorize", { signal }, false);
-    this.token = data.token;
-  }
-  // the end function authorize
+    console.log('Etape05 : Async authorize - IDENTIFICATION - INIT');
 
-  // function createTransfer
+    ///app.webmanifest
+    // api/info
+    let data = await this._request("/share", {
+      signal
+    }, false);
+
+    ///api/metrics
+    console.log(data);
+    this.token = data.token;
+    //  this.token = TOKEN;
+    console.log("reponse token : ");
+    console.log(token);
+
+    console.log('Etape06 : Async authorize... END');
+
+  }
+
   async createTransfer(name, data, description = "", signal = null) {
+    console.log('Etape03: createTransfer');
+
     if (!this.token) {
-      await this.authorize();
+      console.log('Etape03 B : Magic Authorize : TODO');
+      //      await this.authorize();
     }
 
-    let transfer = await this._request("/api.js", {
+    console.log('Etape04 : suite4');
+
+    let transfer = await this._request("/share", {
       body: JSON.stringify({
         message: name,
-        files: [{ name, size: data.byteLength }],
+        files: [{
+          name,
+          size: data.byteLength
+        }],
       }),
       signal,
     });
 
-  //  let transfer = await this._request("/v2/transfers", {
-//      body: JSON.stringify({
-  //      message: name,
-  //      files: [{ name, size: data.byteLength }],
-  //    }),
-//      signal,
-//    });
+    console.log('Etape04 B : transfer PREPA');
+    console.log(transfer);
 
     let file = transfer.files[0];
-console.log ('---------------- FILE');
-    console.log (file);
-//    for (let partNumber = 1; partNumber <= file.multipart.part_numbers; partNumber++) {
-//      let uploadURL = await this._request(
-//        `/v2/transfers/${transfer.id}/files/${file.id}/upload-url/${partNumber}`,
-//        {
-//          method: "GET",
-//          signal,
-//        },
-//      );
+    console.log('---------------- FILE');
+    console.log(file);
+    console.log(file.multipart.part_numbers);
+    for (let partNumber = 1; partNumber <= file.multipart.part_numbers; partNumber++) {
+      console.log('-------->envoie fichier');
+      console.log(this._request);
 
-//      await fetch(uploadURL.url, {
-//        method: "PUT",
-//        body: data.slice((partNumber - 1) * FIVE_MB, partNumber * FIVE_MB),
-//        signal,
-//      });
-//    }
+      let uploadURL = await this._request(
+        `/share/${transfer.id}`, {
+          method: "GET",
+          signal,
+        },
+      );
 
-//    await this._request(
-//      `/v2/transfers/${transfer.id}/files/${file.id}/upload-complete`,
-//      {
-//        method: "PUT",
-//        body: JSON.stringify({ part_numbers: file.multipart.part_numbers }),
-//        signal,
-//      },
-//    );
+      await fetch(uploadURL.url, {
+        method: "PUT",
+        body: data.slice((partNumber - 1) * LIMITS['ANON']['MAX_FILE_SIZE'], partNumber * LIMITS['ANON']['MAX_FILE_SIZE']),
+        signal,
+      });
+
+    }
+
+    await this._request(
+      `/share/${transfer.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          part_numbers: file.multipart.part_numbers
+        }),
+        signal,
+      },
+    );
 
     return this._request(
-      `/v2/transfers/${transfer.id}/finalize`,
-      {
+      `/share/${transfer.id}`, {
         method: "PUT",
         signal,
       }
     );
 
+
   }
-  //--- the end function createTransfer
+
 }
 
-//------------------------------------------------
-
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
 
 var abortControllers = new Map();
-console.log ('browser.cloudFile.onFileUpload');
 
-
-browser.cloudFile.onFileUpload.addListener(async (account, { id, name, data }) => {
-      console.log ('cloudFile.onFileUpload.addListener');
-  let session_transfer = new transferSendFirefox();
-  console.log (session_transfer);
+//-------cloudFile onFileUpload---------------------------
+browser.cloudFile.onFileUpload.addListener(async (account, {
+  id,
+  name,
+  data
+}) => {
+  console.log('Etape 0:browser.cloudFile.onFileUpload');
+  let session = new transferSendFirefox();
   let controller = new AbortController();
-  console.log (controller);
   abortControllers.set(id, controller);
 
   try {
-    let session_transfer = await session_transfer.createTransfer(name, data, "", controller.signal);
-    console.log (session_transfer);
-    return { url: session_transfer.url };
+    console.log("Etape02 : create transfer");
+    console.log('id : ' + id + ' ///// name : ' + name);
+    console.log(data);
+    console.log(controller.signal);
+    let transfer = await session.createTransfer(name, data, "", controller.signal);
+    console.log('+++++ transfer');
+    console.log(transfer);
+    return {
+      url: transfer.url
+    };
   } finally {
+    console.log('-----------------------------------');
+    console.log('- ABORT Etape02 : create transfer -');
+    console.log('-----------------------------------');
     abortControllers.delete(id);
   }
 });
 
+console.log('*************************');
+console.log('Etape20:onFileUploadAbort');
+console.log('*************************');
+//--------cloudFile onFileUploadAbort-------------------------------
 browser.cloudFile.onFileUploadAbort.addListener((account, id) => {
   let controller = abortControllers.get(id);
+  console.log(controller);
   if (controller) {
     controller.abort();
   }
 });
 
+
+console.log('**********************');
+console.log('Etape30:getAllAccounts');
+console.log('**********************');
+//-----------------------------------------------
 browser.cloudFile.getAllAccounts().then(async (accounts) => {
   for (let account of accounts) {
-    await browser.cloudFile.updateAccount(account.id, { uploadSizeLimit: ONE_GB });
+    await browser.cloudFile.updateAccount(account.id, {
+      configured: true,
+      uploadSizeLimit: LIMITS['ANON']['MAX_FILE_SIZE'],
+    });
   }
 });
 
-//browser.cloudFile.onAccountAdded.addListener(async (account) => {
-//  await browser.cloudFile.updateAccount(account.id, { uploadSizeLimit: ONE_GB });
-//});
+/*
+console.log('**********************');
+console.log('Etape40:onAccountAdded');
+console.log('**********************');
+browser.cloudFile.onAccountAdded.addListener(async (account) => {
+  await browser.cloudFile.updateAccount(account.id, {
+    configured: true,
+    uploadSizeLimit: TWO_GB,
+  });
+});
+
+*/

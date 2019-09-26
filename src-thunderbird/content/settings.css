@@ -11,6 +11,7 @@ html, body {
 body {
   min-height: 300px;
   font: message-box;
+  background-color: #FF0000;
 }
 
 .text-link {

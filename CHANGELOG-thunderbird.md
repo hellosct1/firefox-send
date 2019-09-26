@@ -3,7 +3,7 @@
 
 ## Thunderbird
 
-### 1.00
+### 0.10
 Cette version s'appuie sur la version de **Transfer Send for Firefox** 1.11
 
 ### Compatibility
